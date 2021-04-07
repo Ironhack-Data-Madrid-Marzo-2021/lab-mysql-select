@@ -1,4 +1,4 @@
---I managed to import the DF in these queries in the main.ipynb using .env variables
+--I managed to print the DataFrame in these queries in the main.ipynb using .env variables :)
 
 -- 1
 SELECT 
@@ -96,7 +96,7 @@ FROM
             author.au_id,
             author.au_lname,
             author.au_fname,
-            (title.price * sale.qty * title.royalty / 10000) AS 'ROYALTIES'
+            (title.price * sale.qty * title.royalty) AS 'ROYALTIES'
     FROM
         titles as title
     INNER JOIN sales as sale ON sale.title_id = title.title_id
