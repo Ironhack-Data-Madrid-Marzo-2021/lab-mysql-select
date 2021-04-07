@@ -39,5 +39,13 @@ ORDER BY TOTAL DESC;
 
 # Bonus Challenge - Most Profiting Authors
 
-SELECT ta.au_id AS AUTHOR_ID, a.au_lname AS LAST_NAME, a.au_fname AS FIRST_NAME, SUM(t.title) AS PROFIT
+SELECT a.au_id AS AUTHOR_ID , a.au_lname AS LAST_NAME, a.au_fname AS FIRST_NAME, sum(t.royalty + t.advance) AS PROFIT
+FROM authors AS a
+	LEFT JOIN titleauthor AS ta ON a.au_id = ta.au_id
+	LEFT JOIN titles AS t ON ta.title_id = t.title_id
+    LEFT JOIN sales AS s ON t.title_id = s.title_id
+GROUP BY a.au_id
+ORDER BY PROFIT DESC
+LIMIT 3;
 
+ 
