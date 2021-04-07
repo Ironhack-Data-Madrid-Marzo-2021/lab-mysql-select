@@ -74,33 +74,36 @@ ORDER BY TOTAL DESC;
 -- Bonus
 -- He intentado hacer algo asi pero no me sale :(
 SELECT 
-    author.au_id AS 'AUTHOR ID',
-    author.au_fname AS 'FIRST NAME',
-    author.au_lname AS 'LAST NAME',
-    ROYALTIES AS 'PROFITS'
+    au_id AS 'AUTHOR ID',
+    au_fname AS 'FIRST NAME',
+    au_lname AS 'LAST NAME',
+    SUM(advance + ROY) AS PROFIT
 FROM
     (SELECT 
-			title.title_id,
-            author.au_id,
-            author.au_lname,
-            author.au_fname,
+        title_id,
+            au_id,
+            au_lname,
+            au_fname,
             advance,
-            SUM(ROYALTIES) AS 'ROYALTIES'
+            SUM(ROY) AS ROY
     FROM
         (SELECT 
-			title.title_id,
+        title.title_id,
             title.price,
             title.advance,
             title.royalty,
             sale.qty,
             author.au_id,
-            author.au_lname,
-            author.au_fname,
-            (title.price * sale.qty * title.royalty) AS 'ROYALTIES'
+            au_lname,
+            au_fname,
+            ta.royaltyper,
+            (title.price * sale.qty * (title.royalty / 100) * (ta.royaltyper / 100)) AS Roy
     FROM
         titles as title
     INNER JOIN sales as sale ON sale.title_id = title.title_id
     INNER JOIN titleauthor as ta ON ta.title_id = sale.title_id
-    INNER JOIN authors as author ON author.au_id = ta.au_id)
-    GROUP BY author.au_id , title.title_id)
-GROUP BY author.au_id
+    INNER JOIN authors as author ON author.au_id = ta.au_id) AS table1
+    GROUP BY au_id , title_id) AS table2
+GROUP BY au_id
+ORDER BY PROFITS DESC
+LIMIT 3;
